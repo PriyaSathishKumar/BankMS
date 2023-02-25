@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BankMsApplication {
 
 	public static void main(String[] args) {
+		//BasicConfigurator.configure();
 		SpringApplication.run(BankMsApplication.class, args);
+
 	}
 
 }
