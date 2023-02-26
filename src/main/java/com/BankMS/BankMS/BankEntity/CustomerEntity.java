@@ -25,4 +25,8 @@ public class CustomerEntity {
    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<AccountEntity> accounts;
 
+    public boolean isPresent() {
+        int id=this.getCust_Id();
+        return true;
+    }
 }

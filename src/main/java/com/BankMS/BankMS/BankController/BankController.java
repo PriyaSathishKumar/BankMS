@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/bank")
@@ -138,10 +139,28 @@ public class BankController {
         return accountservice.updateAccount(entity);
     }
     @DeleteMapping("/deleteAccount/{accountNumber}")
-    public String deleteAccountById(@PathVariable int accountNumber) {
-        logger.info("Account Deleted Successfuly "+accountNumber);
-        String s = accountservice.deleteAccountById(accountNumber);
-        //return service.deleteAccountById(accountNumber);
-        return "Account"+accountNumber+"Deleted";
+//    public String deleteAccountById(@PathVariable int accountNumber) {
+//        logger.info("Account Deleted Successfuly "+accountNumber);
+//        String s = accountservice.deleteAccountById(accountNumber);
+//        //return service.deleteAccountById(accountNumber);
+//        return "Account"+accountNumber+"Deleted";
+//    }
+//}
+    public String deleteCustomer(@PathVariable("customerId") int customerId) {
+        CustomerEntity optionalCustomer = customerservice.getCustomerById(customerId);
+        if (optionalCustomer.isPresent()) {
+            int customer = optionalCustomer.getCust_Id();
+            List<AccountEntity> accounts = (List<AccountEntity>) accountservice.getAccountsByCustomerId(customerId);
+            if (accounts.isEmpty()) {
+                customerservice.deleteCustomerById(customer);
+                //return ResponseEntity.ok().build();
+                return "Customer Deleted";
+            } else {
+                //return ResponseEntity.badRequest().body("Cannot delete customer with active accounts");
+                return "Cannot delete customer with active accounts";
+            }
+        } else {
+            return "CustomerNotFound";
+        }
     }
 }
