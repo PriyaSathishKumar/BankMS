@@ -13,16 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="custTable")
+@Table(name="primarycustomer")
 public class CustomerEntity {
     @Id
-    @GeneratedValue
-    private int custId;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private int cust_Id;
     private String custName;
     private int panCard;
     private String place;
     private long mobileNo;
-    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<AccountEntity> accounts;
 
 }

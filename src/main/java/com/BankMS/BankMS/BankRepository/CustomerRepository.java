@@ -12,6 +12,9 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<CustomerEntity,Integer> {
 //    @Query("SELECT * FROM CustomerEntity p WHERE "+"p.custName LIKE CONCAT('%',:query,'%')")+
 //            " and p.customerLastName LIKE CONCAT('%',:query,'%')")
-    @Query("SELECT * FROM CustomerEntity p WHERE "+"p.custName LIKE CONCAT('%',:query,'%')")
-    List<CustomerEntity> findByNameContainingIgnoreCase(String query);
+    @Query(value="SELECT * FROM CustomerEntity p WHERE "+"p.custName LIKE CONCAT('%',:query,'%')",nativeQuery = true)
+    List<CustomerEntity> findAllByCustomerNameContaining(String query);
+    //List<CustomerEntity> findByNameContainingIgnoreCase(String query);
+
+    boolean existsById(CustomerEntity id);
 }

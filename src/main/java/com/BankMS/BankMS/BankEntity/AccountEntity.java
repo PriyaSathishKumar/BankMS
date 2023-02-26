@@ -10,18 +10,18 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="accountTable")
+@Table(name="primaryaccount")
 public class AccountEntity {
     @Id
     @GeneratedValue
     private int accountNumber;
-    //private int custId;
+    private int cust_id;
     //private String CustName;
     private int balance;
     private String accType;
     private String status;
     @ManyToOne
-    @JoinColumn(name = "cust_id")
+//    @JoinColumn(name = "cust_id")
     private CustomerEntity customer ;
 
 }
