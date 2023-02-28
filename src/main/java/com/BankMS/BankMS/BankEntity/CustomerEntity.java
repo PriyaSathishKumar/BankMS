@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Transactional
 @Table(name="primarycustomer")
 public class CustomerEntity {
     @Id
@@ -22,12 +24,8 @@ public class CustomerEntity {
     private int panCard;
     private String place;
     private long mobileNo;
-   @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AccountEntity> accounts;
+   @OneToMany(cascade = CascadeType.ALL)
+   @JoinColumn(name="fk_cust_Id",referencedColumnName = "cust_Id")
+    private List<AccountEntity> account;
 
-//    public boolean isPresent() {
-////        int id;
-////        this.cust_Id=id;
-//        return true;
-//    }
 }

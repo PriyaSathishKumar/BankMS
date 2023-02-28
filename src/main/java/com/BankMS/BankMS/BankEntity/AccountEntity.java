@@ -5,28 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Transactional
 @Table(name="primaryaccount")
 public class AccountEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int accountNumber;
-    //private int cust_id;
-    //private String CustName;
     private int balance;
     private String accType;
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_entity_cust_id")
-    private CustomerEntity customer;
-
 //    @ManyToOne
-//    @JoinColumn(name = "cust_id")
-    //private CustomerEntity customer ;
+//    @JoinColumn(name = "fk_cust_id")
+//    private CustomerEntity customer;
 
 }

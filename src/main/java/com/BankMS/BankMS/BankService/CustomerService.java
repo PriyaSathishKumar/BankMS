@@ -1,18 +1,14 @@
 package com.BankMS.BankMS.BankService;
 
-import com.BankMS.BankMS.BankEntity.AccountEntity;
 import com.BankMS.BankMS.BankEntity.CustomerEntity;
 import com.BankMS.BankMS.BankRepository.CustomerRepository;
-import com.BankMS.BankMS.dTO.CustomerAccountDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -22,29 +18,26 @@ public class CustomerService {
 
         return repository.save(entity);
     }
-    public CustomerEntity getCustomerById(int id) {
-
-        return repository.findById(id).orElse(null);
-
-    }
+    public Optional<CustomerEntity> getCustomerById(int id) {
+        Optional<CustomerEntity> customer=repository.findById(id);
+        try{
+            if(customer==null){
+                //throw new Exception("Customer with ID " + id + " not found");
+                return null;
+            }else{
+                return repository.findById(id);
+            }
+        }catch (Exception e){
+            return null;
+        }finally {
+            //logger.info("Customer-ID Not valid-Exited");
+            return repository.findById(id);
+        }
+     }
     public List<CustomerEntity> getCustomers() throws JsonProcessingException {
         return repository.findAll();
     }
 
-//    public List<CustomerEntity> listAll(String keyword)
-//    {
-//        if(keyword!=null){
-//            return repository.search(keyword);
-//        }
-//            return repository.findAll();
-//    }
-    // get Customer detail by Customer name
-
-//    public List<CustomerEntity> getCustomerByCustomerName(@RequestParam("query") String query) {
-//        List<CustomerEntity> entity=repository.findAllByCustomerNameContaining(query);
-//        return entity ;
-//        //return null;
-//    }
     public CustomerEntity updateCustomer(CustomerEntity entity) {
         CustomerEntity existingCustomer = repository.findById(entity.getCust_Id()).orElse(null);
         existingCustomer.setCustName(entity.getCustName());
@@ -55,7 +48,7 @@ public class CustomerService {
     }
     public String  deleteCustomerById(int id) {
         repository.deleteById(id);
-        return "Account- " + id + " is deleted";
+        return "Customer- " + id + " is deleted";
     }
 
 }
