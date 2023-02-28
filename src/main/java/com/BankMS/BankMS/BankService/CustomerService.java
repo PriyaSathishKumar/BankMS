@@ -30,13 +30,21 @@ public class CustomerService {
     public List<CustomerEntity> getCustomers() throws JsonProcessingException {
         return repository.findAll();
     }
+
+//    public List<CustomerEntity> listAll(String keyword)
+//    {
+//        if(keyword!=null){
+//            return repository.search(keyword);
+//        }
+//            return repository.findAll();
+//    }
     // get Customer detail by Customer name
 
-    public List<CustomerEntity> getCustomerByCustomerName(@RequestParam("query") String query) {
-        List<CustomerEntity> entity=repository.findAllByCustomerNameContaining(query);
-        return entity ;
-        //return null;
-    }
+//    public List<CustomerEntity> getCustomerByCustomerName(@RequestParam("query") String query) {
+//        List<CustomerEntity> entity=repository.findAllByCustomerNameContaining(query);
+//        return entity ;
+//        //return null;
+//    }
     public CustomerEntity updateCustomer(CustomerEntity entity) {
         CustomerEntity existingCustomer = repository.findById(entity.getCust_Id()).orElse(null);
         existingCustomer.setCustName(entity.getCustName());

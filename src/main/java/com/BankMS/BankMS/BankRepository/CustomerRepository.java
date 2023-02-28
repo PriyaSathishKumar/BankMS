@@ -8,13 +8,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-
 public interface CustomerRepository extends JpaRepository<CustomerEntity,Integer> {
 //    @Query("SELECT * FROM CustomerEntity p WHERE "+"p.custName LIKE CONCAT('%',:query,'%')")+
 //            " and p.customerLastName LIKE CONCAT('%',:query,'%')")
-    @Query(value="SELECT * FROM CustomerEntity p WHERE "+"p.custName LIKE CONCAT('%',:query,'%')",nativeQuery = true)
-    List<CustomerEntity> findAllByCustomerNameContaining(String query);
-    //List<CustomerEntity> findByNameContainingIgnoreCase(String query);
+    //@Query("SELECT * FROM CustomerEntity p WHERE "+"p.custName LIKE %?query%")
+    //List<CustomerEntity> findAllByCustomerNameContaining(String name);
+    //List<CustomerEntity> search(String keyword);
+    List<CustomerEntity> findAllByCustNameContainingIgnoreCase(String name);
 
-    boolean existsById(CustomerEntity id);
+    //String existsById(CustomerEntity id);
+
+    //boolean existsById(CustomerEntity id);
 }

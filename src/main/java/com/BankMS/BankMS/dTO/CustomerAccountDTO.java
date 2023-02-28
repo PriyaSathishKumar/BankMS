@@ -8,8 +8,8 @@ import javax.persistence.Id;
 @Data
 public class CustomerAccountDTO {
 
-    private int custId;
-    private int accountNumber;
+    //private int custId;
+    //private int accountNumber;
     private int balance;
     private String accType;
     private String status;

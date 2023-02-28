@@ -8,6 +8,7 @@ import com.BankMS.BankMS.dTO.CustomerAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,39 +21,39 @@ public class AccountService {
         private CustomerRepository customerRepository;
         @Autowired
         private CustomerService customerService;
-//        public ResponseEntity<?> createAccount(@RequestBody CustomerAccountDTO accountRequestDto) {
-//                CustomerEntity customer = customerService.getCustomerById(accountRequestDto.getCustId());
-//                if (customer == null) {
-//                        return ResponseEntity.badRequest().body("Customer not found");
-//                }
-//                AccountEntity account = new AccountEntity();
-//                account.setAccountNumber(accountRequestDto.getAccountNumber());
-//                //account.setCustomer(customer);
-//                account.setBalance(accountRequestDto.getBalance());
-//                account.setAccType(accountRequestDto.getAccType());
-//                account.setStatus(accountRequestDto.getStatus());
-//                repository.createAccount(account);
-//                return ResponseEntity.ok("Account created successfully");
-//        }
-        public String saveAccount(AccountEntity entity) {
-                 CustomerEntity customer=null;
-                CustomerEntity id = customerService.getCustomerById(customer.getCust_Id());
-                try {
-                        if (id == null) {
-                                throw new Exception("Enter Customer ID");
-                        }
-                        if (!customerRepository.existsById(id)) {
-                             return "Customer not found";
-                        }else {
-                                 repository.save(entity);
-                                return "Account Created Successfully";
-                        }
-                } catch (Exception e) {
-                        throw new RuntimeException(e);
-                }finally{
-                        return "Exit from Create Account";
+        public ResponseEntity<?> createAccount(CustomerAccountDTO accountRequestDto,CustomerEntity  id) {
+                CustomerEntity customer = customerService.getCustomerById(accountRequestDto.getCustId());
+                if (customer == null) {
+                        return ResponseEntity.badRequest().body("Customer not found");
                 }
+                AccountEntity account = new AccountEntity();
+                //account.setAccountNumber(accountRequestDto.getAccountNumber());
+                //account.setCustomer(customer);
+                account.setBalance(accountRequestDto.getBalance());
+                account.setAccType(accountRequestDto.getAccType());
+                account.setStatus(accountRequestDto.getStatus());
+                repository.save(account);
+                return ResponseEntity.ok("Account created successfully");
         }
+//        public String saveAccount(AccountEntity entity) {
+//                 CustomerEntity customer=null;
+//                CustomerEntity id = customerService.getCustomerById(customer.getCust_Id());
+//                try {
+//                        if (id == null) {
+//                                throw new Exception("Enter valid Customer ID");
+//                        }
+//                        if (!customerRepository.existsById(id)) {
+//                             return "Customer not found";
+//                        }else {
+//                                 repository.save(entity);
+//                                return "Account Created Successfully";
+//                        }
+//                } catch (Exception e) {
+//                        throw new RuntimeException(e);
+//                }finally{
+//                        return "Exit from Create Account";
+//                }
+//        }
         public List<AccountEntity> getAccounts() {
                 return repository.findAll();
         }
@@ -73,7 +74,7 @@ public class AccountService {
                 existingAccount.setAccType(entity.getAccType());
                 existingAccount.setBalance(entity.getBalance());
                 //existingAccount.setCustName(entity.getCustName());
-                existingAccount.setCust_id(entity.getCust_id());
+                //existingAccount.setCust_id(entity.getCust_id());
                 existingAccount.setStatus(entity.getStatus());
                 return repository.save(existingAccount);
         }
@@ -86,12 +87,16 @@ public class AccountService {
 
         private CustomerAccountDTO convertEntityToDTO(AccountEntity account){
                 CustomerAccountDTO customeraccountdto=new CustomerAccountDTO();
-                customeraccountdto.setCustId(account.getCust_id());
-                customeraccountdto.setAccountNumber(account.getAccountNumber());
+                //customeraccountdto.setCustId(account.getCust_id());
+                //customeraccountdto.setAccountNumber(account.getAccountNumber());
                 customeraccountdto.setBalance(account.getBalance());
                 customeraccountdto.setAccType(account.getAccType());
                 customeraccountdto.setStatus(account.getStatus());
                 return customeraccountdto;
         }
 
+//        public AccountEntity saveAccount(@RequestBody AccountEntity  entity){
+//
+//                return repository.save(entity);
+//        }
 }

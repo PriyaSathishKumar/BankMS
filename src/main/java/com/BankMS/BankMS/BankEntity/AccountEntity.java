@@ -15,13 +15,18 @@ public class AccountEntity {
     @Id
     @GeneratedValue
     private int accountNumber;
-    private int cust_id;
+    //private int cust_id;
     //private String CustName;
     private int balance;
     private String accType;
     private String status;
+
     @ManyToOne
+    @JoinColumn(name = "customer_entity_cust_id")
+    private CustomerEntity customer;
+
+//    @ManyToOne
 //    @JoinColumn(name = "cust_id")
-    private CustomerEntity customer ;
+    //private CustomerEntity customer ;
 
 }
