@@ -8,6 +8,7 @@ import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity
 @Transactional
 @Table(name="primarycustomer")
-public class CustomerEntity {
+public class CustomerEntity implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int cust_Id;
@@ -26,6 +27,6 @@ public class CustomerEntity {
     private long mobileNo;
    @OneToMany(cascade = CascadeType.ALL)
    @JoinColumn(name="fk_cust_Id",referencedColumnName = "cust_Id")
-    private List<AccountEntity> account;
+    private AccountEntity account;
 
 }

@@ -63,11 +63,11 @@ public class BankController {
         logger.info("Account Updated Successfully "+entity);
         return customerservice.updateCustomer(entity);
     }
-    @DeleteMapping("/deleteCustomer/{id}")
+    @DeleteMapping("/deleteCustomer/{customerId}")
     public ResponseEntity<?> deleteCustomer(@PathVariable("customerId") int customerId) {
-        Optional<Optional<CustomerEntity>> optionalCustomer = ofNullable(customerservice.getCustomerById(customerId));
+        Optional<CustomerEntity> optionalCustomer =customerservice.getCustomerById(customerId);
         if (optionalCustomer.isPresent()) {
-            Optional<CustomerEntity> customer = optionalCustomer.get();
+            Optional<CustomerEntity> customer = Optional.of(optionalCustomer.get());
             List<AccountEntity> accounts = (List<AccountEntity>) accountservice.getAccountsByCustomerId(customerId);
             if (accounts.isEmpty()) {
                 customerservice.deleteCustomerById(customerId);
