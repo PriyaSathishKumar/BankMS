@@ -2,6 +2,7 @@ package com.BankMS.BankMS.BankController;
 
 import com.BankMS.BankMS.BankEntity.AccountEntity;
 import com.BankMS.BankMS.BankEntity.CustomerEntity;
+import com.BankMS.BankMS.BankRepository.AccountRepository;
 import com.BankMS.BankMS.BankRepository.CustomerRepository;
 import com.BankMS.BankMS.BankService.AccountService;
 import com.BankMS.BankMS.BankService.CustomerService;
@@ -12,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +23,8 @@ import static java.util.Optional.*;
 public class BankController {
     @Autowired
     private AccountService accountservice;
+    @Autowired
+    private AccountRepository accountRepository;
     @Autowired
     private CustomerRepository customerrepository;
     @Autowired
@@ -36,7 +38,6 @@ public class BankController {
     // get all Customers details
     @GetMapping("/allcustomers")
     public List<CustomerEntity> findAllCustomer() throws JsonProcessingException {
-
         logger.info("Get All Customer Details "+customerservice.getCustomers());
         return customerservice.getCustomers();
     }
@@ -51,9 +52,6 @@ public class BankController {
     // get Customer details by name
 
     @GetMapping("/search")
-//    public List<CustomerEntity> searchCustomers(@RequestParam("name") String name) {
-//        return customerrepository.findAllBycustNameContainingAndIgnoreCase(name);
-//    }
     public List<CustomerEntity> getCustomerByCustomerName(@RequestParam("query") String query) {
         logger.info("Read Customer Details By Name ");
         return customerrepository.findAllBycustNameContainingAndIgnoreCase(query);
@@ -64,52 +62,27 @@ public class BankController {
         return customerservice.updateCustomer(entity);
     }
     @DeleteMapping("/deleteCustomer/{customerId}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable("customerId") int customerId) {
+     public ResponseEntity<String> deleteCustomer(@PathVariable("customerId") int customerId) {
         Optional<CustomerEntity> optionalCustomer =customerservice.getCustomerById(customerId);
         if (optionalCustomer.isPresent()) {
             Optional<CustomerEntity> customer = Optional.of(optionalCustomer.get());
-            List<AccountEntity> accounts = (List<AccountEntity>) accountservice.getAccountsByCustomerId(customerId);
-            if (accounts.isEmpty()) {
+            AccountEntity accounts = accountservice.getAccountsByCustomerId(customerId);
+            if (!accounts.equals(customerId)) {
+                return ResponseEntity.badRequest().body("Cannot delete customer with active accounts");
+            }
+            else {
                 customerservice.deleteCustomerById(customerId);
                 return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.badRequest().body("Cannot delete customer with active accounts");
             }
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-//    public String deleteCustomerById(@PathVariable int id) {
-//        //logger.info("Account Deleted Successfuly "+id);
-//        String s = customerservice.deleteCustomerById(id);
-//        //return service.deleteAccountById(id);
-//        return "Customer Deleted Successfully"+s;
-//    }
-//    @PostMapping("/addAccount")
-//    //Adding Account Details
-//    public ResponseEntity<?> addAccounts(@RequestBody CustomerAccountDTO accountRequestDto) {
-//        logger.info("Account Created for Customer ");
-//        return accountservice.createAccount(accountRequestDto);
-//    }
-
-//    public String saveAccount(@RequestBody AccountEntity entity) {
-//        logger.info("Account Added Msg ");
-//        //logger.info("Priya");
-//         accountservice.saveAccount(entity);
-//        return "Account Created for Customer";
-//    }
-
-//    @PostMapping("/addAccount")
-//    //Adding Account Details
-//    public List<AccountEntity> addAccounts(@RequestBody List<AccountEntity> entities) {
-//        logger.info("Multiple Account Added ");
-//        return accountservice.saveAccounts(entities);
-//    }
     @PostMapping("/createaccountforcustomer")
-    public CustomerEntity createAccount(@RequestBody CustomerEntity customer) {
+    public AccountEntity createAccount(@RequestBody AccountEntity account) {
         logger.info("Account created successfully");
-        return customerrepository.save(customer);
+        return accountRepository.save(account);
     }
     @GetMapping("/allaccounts")
     public List<AccountEntity> findAllAccount() {
@@ -117,10 +90,6 @@ public class BankController {
         return accountservice.getAccounts();
     }
     @GetMapping("/customerallaccounts/{cust-id}")
-//    public List<CustomerAccountDTO> findAllAccountDetailsforCustomer(@PathVariable int custid) {
-//        logger.info("Getting All Accounts for customer");//+accountservice.getAccounts());
-//        return accountservice.getAllAccountDetailsforCustomer();
-//    }
       public List<AccountEntity> getAccountsByCustomerId(@PathVariable("customerId") int customerId) {
         return (List<AccountEntity>) accountservice.getAccountsByCustomerId(customerId);
     }
@@ -129,16 +98,6 @@ public class BankController {
         logger.info("Get Account Details by AccountNumber "+accountNumber);
         return accountservice.getAccountById(accountNumber);
     }
-//    @GetMapping("/customerallaccounts")
-//    public List<CustomerAccountDTO> getAllAccountDetailsforCustomer() {
-//        logger.info("Getting All Accounts "+accountservice.getAccounts());
-//        return accountservice.getAllAccountDetailsforCustomer();
-//    }
-
-    //        @GetMapping("/accountByName/{customerName}")
-//        public List<BankEntity> findAccountByName(@PathVariable String customerName) {
-//            return service.getAccountByName(customerName);
-//        }
     @PutMapping("/updateAccount")
     public AccountEntity updateAccount(@RequestBody AccountEntity entity) {
         logger.info("Account Updated Successfully "+entity);

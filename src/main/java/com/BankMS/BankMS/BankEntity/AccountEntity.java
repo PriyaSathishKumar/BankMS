@@ -15,14 +15,14 @@ import javax.transaction.Transactional;
 @Table(name="primaryaccount")
 public class AccountEntity {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue
     private int accountNumber;
     private int balance;
     private String accType;
     private String status;
 
-//    @ManyToOne
-//    @JoinColumn(name = "fk_cust_id")
-//    private CustomerEntity customer;
+ @ManyToOne
+    @JoinColumn(name = "fk_cust_id")
+    private CustomerEntity customer;
 
 }

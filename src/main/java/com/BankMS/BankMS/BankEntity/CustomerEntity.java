@@ -27,6 +27,6 @@ public class CustomerEntity implements Serializable {
     private long mobileNo;
    @OneToMany(cascade = CascadeType.ALL)
    @JoinColumn(name="fk_cust_Id",referencedColumnName = "cust_Id")
-    private AccountEntity account;
+    private List<AccountEntity> account;
 
 }
